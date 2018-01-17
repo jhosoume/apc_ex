@@ -1,17 +1,14 @@
 #include<stdio.h>
 
 int main(void) {
-    int prev = 0, next = 1, sum = 0;
+    int prev = 0, num, sum = 0;
     printf("Enter the sequence of numbers ");
-    scanf("%d", &prev);
-    scanf("%d", &next);
-    sum = prev + next;
-    while(next != 0) {
-        prev = next;
-        scanf("%d", &next);
-        if (prev + next > sum)
-            sum = prev + next;
-    }
+    do {
+        scanf("%d", &num);
+        if (prev + num > sum)
+            sum = prev + num;
+        prev = num;
+    } while(num != 0);
     printf("The biggest sum is %d.", sum);
     return 0;
 }
