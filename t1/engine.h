@@ -24,6 +24,9 @@ int gameLoop(int num_pieces, piece sequences[MAX_SEQ], int nlines, int ncolumns,
 int defineAction(char command, piece *c_piece, char game[N_LINES][N_COLUMNS]);
 void endGame(int stats);
 void moveRight(piece *c_piece, char game[N_LINES][N_COLUMNS]);
+void moveLeft(piece *c_piece, char game[N_LINES][N_COLUMNS]);
+void rotate(piece *c_piece, char game[N_LINES][N_COLUMNS]);
+int freeLine(char orientation, int column, int size, char game[N_LINES][N_COLUMNS]);
 int checkLimitReached();
 void startMessage();
 void loseMessage();
