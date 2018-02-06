@@ -26,6 +26,7 @@ void endGame(int stats);
 void moveRight(piece *c_piece, char game[N_LINES][N_COLUMNS]);
 void moveLeft(piece *c_piece, char game[N_LINES][N_COLUMNS]);
 void rotate(piece *c_piece, char game[N_LINES][N_COLUMNS]);
+void fall(piece *c_piece, char game[N_LINES][N_COLUMNS], int points);
 int freeLine(char orientation, int column, int size, char game[N_LINES][N_COLUMNS]);
 int checkLimitReached();
 void startMessage();

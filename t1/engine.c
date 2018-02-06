@@ -158,9 +158,17 @@ void rotate(piece *c_piece, char game[N_LINES][N_COLUMNS]) {
 
 void fall(piece *c_piece, char game[N_LINES][N_COLUMNS], int points) {
     int free_line = freeLine(c_piece->orientation, c_piece->column, c_piece->size, game);
+    int column, line;
     erasePiece(*c_piece, N_LINES, N_COLUMNS, game);
-
-
+    if (c_piece->orientation == 'h') {
+        for (column = c_piece->column; column < c_piece->column + c_piece->size; ++column) {
+            game[free_line][column] = c_piece->rep;
+        }
+    } else {
+        for (line = free_line; line > free_line - c_piece->size + 1; --line) {
+            game[line][c_piece->column] = c_piece->rep;
+        }
+    }
 }
 
 int freeLine(char orientation, int column, int size, char game[N_LINES][N_COLUMNS]) {
@@ -252,6 +260,7 @@ int defineAction(char command, piece *c_piece, char game[N_LINES][N_COLUMNS]) {
             return 0;
         case 'c':
         case 'C':
+            fall(c_piece, game, 0);
             printf("Go fall\n");
             return 1;
         case 'q':
