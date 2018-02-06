@@ -7,8 +7,8 @@ LIBS=-lm
 
 NAME=tetris
 
-DEPS = tetris.h engine.h screen.h sequence.h 
-OBJ = tetris.o engine.o screen.o sequence.o
+DEPS = tetris.h engine.h screen.h 
+OBJ = tetris.o engine.o screen.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)

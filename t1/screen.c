@@ -2,6 +2,7 @@
 
 void printFrame() {
     int line;
+    clear();
     printf("  +--------------------+\n");
     for (line = 0; line < 6; ++line) {
         printf("  |                    |\n");
@@ -17,23 +18,25 @@ void showScreen() {
     printFrame();
 }
 
-/*void cleanScreen(int total_points) {
+void cleanScreen(int total_points, int nlines, int ncolumns, char game[nlines][ncolumns]) {
     int line, column;
+    clear();
     printf("  +--------------------+      PONTUACAO: %d\n",total_points);
-    for (line = 0; line < 15; ++line) {
-      if (line == 6)
+    for (line = 0; line < nlines; ++line) {
+      if (line == 6) {
           printf("=>+");
-      else
+      } else {
           printf("  |");
-      for (column = 0; column < 20; ++column)
-          printf("%c",JOGO[i][j]); 
-      if (line == 6)
-          printf("+<=⧵n");
-      else
-          printf("|⧵n");
+      }
+      for (column = 0; column < ncolumns; ++column) {
+          printf("%c", game[line][column]); 
+      }
+      if (line == 6) {
+          printf("+<=\n");
+      } else {
+          printf("|\n");
+      }
     }
     printf("  +--------------------+\n");
-    printf("R-rotar D-direita E-esquerda C-cair\n");
-    printf("ACAO: ");
-}*/
+}
 
