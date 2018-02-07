@@ -91,8 +91,8 @@ int gameLoop(int num_pieces, piece sequences[MAX_SEQ], int nlines, int ncolumns,
     int times = 0, count;
     int points = 0;
     char command;
-    addPiece(sequences[times], nlines, ncolumns, game);
     while (times < num_pieces && checkLimitReached()) {
+        addPiece(sequences[times], nlines, ncolumns, game);
         cleanScreen(points, nlines, ncolumns, game);
         command = getCommand(); 
         count = defineAction(command, &sequences[times], game);
@@ -157,45 +157,80 @@ void rotate(piece *c_piece, char game[N_LINES][N_COLUMNS]) {
 }
 
 void fall(piece *c_piece, char game[N_LINES][N_COLUMNS], int points) {
-    int free_line = freeLine(c_piece->orientation, c_piece->column, c_piece->size, game);
+    int free_line; 
     int column, line;
     erasePiece(*c_piece, N_LINES, N_COLUMNS, game);
+    free_line = freeLine(c_piece->orientation, c_piece->column, c_piece->size, game);
     if (c_piece->orientation == 'h') {
         for (column = c_piece->column; column < c_piece->column + c_piece->size; ++column) {
+            printf("[AQUI1] %d %d", free_line, column);
             game[free_line][column] = c_piece->rep;
         }
     } else {
-        for (line = free_line; line > free_line - c_piece->size + 1; --line) {
+        for (line = free_line; line > free_line - c_piece->size; --line) {
+            printf("[AQUI2] %d %d %d", line, free_line, column);
             game[line][c_piece->column] = c_piece->rep;
         }
     }
+    checkCompletedLines(game);
 }
 
 int freeLine(char orientation, int column, int size, char game[N_LINES][N_COLUMNS]) {
     int line, column_indx;
     if (orientation == 'v') {
-        for (line = 0; line > N_LINES; ++line) {
-            if (game[line][column] != ' ')
+        for (line = MAX_LINE; line < N_LINES; ++line) {
+            printf("LINE %d COLUMN %d CHAR %c \n", line, column_indx, game[line][column_indx]);
+            if (game[line][column] != ' ') {
                 return line - 1;
-        }
-        return line;
-    } else {
-        for (line = 0; line > N_LINES; ++line) {
-            for (column_indx = column; column_indx < column + size; ++column) {
-                if (game[line][column_indx] != ' ')
-                    return line - 1;
             }
         }
-        return line;
+        return line - 1;
+    } else {
+        for (line = MAX_LINE; line < N_LINES; ++line) {
+            for (column_indx = column; column_indx < column + size; ++column_indx) {
+                printf("LINE %d COLUMN %d CHAR %c \n", line, column_indx, game[line][column_indx]);
+                if (game[line][column_indx] != ' ') {
+                    return line - 1;
+                }
+            }
+        }
+        return line - 1 ;
     }
 }
 
-void checkCompletedLines() {
+void checkCompletedLines(char game[N_LINES][N_COLUMNS]) {
+    int line, column, flag, line2; 
+    for (line = N_LINES - 1; line > MAX_LINE; --line) {
+        printf("!!!LINE %d %d\n", line, flag);
+        flag = 1;
+        for (column = 0; column < N_COLUMNS; ++column) {
+            if (game[line][column] == ' ') {
+                printf("FOUND EMPTY %d %d\n", line, column);
+                flag = 0;
+                break;
+            }
+        }
+        printf("!!!LINE %d %d\n", line, flag);
+        if (flag) {
+            fillLine(line, line, game);
+            cleanScreen(0, N_LINES, N_COLUMNS, game);
+            getchar();
+            for (line2 = line; line2 > MAX_LINE; --line2) {
+                for (column = 0; column < N_COLUMNS; ++column) {
+                    printf("LINE %d COLUMN %d\n", line2, column);
+                    game[line2][column] = game[line2 - 1][column];
+                }
+            }
+            --line;
+        }
+    }
 }
 
 int checkLimitReached() {
     return 1;
 }
+
+
 
 void startMessage() {
     printf("Tecle <enter> para iniciar o jogo");
@@ -244,28 +279,22 @@ int defineAction(char command, piece *c_piece, char game[N_LINES][N_COLUMNS]) {
     switch (command) {
         case 'r':
         case 'R':
-            printf("Rotate\n");
             rotate(c_piece, game);
-            printf("Rotate\n");
             return 0;
         case 'd':
         case 'D':
-            printf("Go right\n");
             moveRight(c_piece, game);
             return 0;
         case 'e':
         case 'E':
-            printf("Go left\n");
             moveLeft(c_piece, game);
             return 0;
         case 'c':
         case 'C':
             fall(c_piece, game, 0);
-            printf("Go fall\n");
             return 1;
         case 'q':
         case 'Q':
-            printf("Go quit\n");
             return 0;
         default:
             return 0;
@@ -283,7 +312,7 @@ int readSequences(char file_name[], piece sequences[]) {
         sequences[nseq].orientation = 'v';
         sequences[nseq].rep = line[0];
         sequences[nseq].line = 0;
-        sequences[nseq].column = 9;
+        sequences[nseq].column = N_COLUMNS / 2;
         sequences[nseq].size = strlen(line);
         ++nseq;
 	}
@@ -310,15 +339,15 @@ void emptyGame(int nlines, int ncolumns, char game[nlines][ncolumns]) {
     }
 }
 
-void fillGame(int nlines, int ncolumns, char game[nlines][ncolumns]) {
+void fillLine(int bline, int eline, char game[N_LINES][N_COLUMNS]) {
     int line, column;
-    for (line = 0; line < nlines; ++line) {
-        for (column = 0; column < ncolumns; ++column) {
+    for (line = bline; line <= eline; ++line) {
+        for (column = 0; column < N_COLUMNS; ++column) {
             game[line][column] = 'X';
         }
     }
 }
 
-void cleanActionSpace(char game[][20]) {
-    emptyGame(6, 20, game);
+void cleanActionSpace(char game[][N_COLUMNS]) {
+    emptyGame(MAX_LINE, N_COLUMNS, game);
 }
