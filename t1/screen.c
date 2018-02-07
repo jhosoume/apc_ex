@@ -18,17 +18,17 @@ void showScreen() {
     printFrame();
 }
 
-void cleanScreen(int total_points, int nlines, int ncolumns, char game[nlines][ncolumns]) {
+void cleanScreen(int total_points, char game[N_LINES][N_COLUMNS]) {
     int line, column;
     clear();
     printf("  +--------------------+      PONTUACAO: %d\n",total_points);
-    for (line = 0; line < nlines; ++line) {
+    for (line = 0; line < N_LINES; ++line) {
       if (line == 6) {
           printf("=>+");
       } else {
           printf("  |");
       }
-      for (column = 0; column < ncolumns; ++column) {
+      for (column = 0; column < N_COLUMNS; ++column) {
           printf("%c", game[line][column]); 
       }
       if (line == 6) {
@@ -38,5 +38,34 @@ void cleanScreen(int total_points, int nlines, int ncolumns, char game[nlines][n
       }
     }
     printf("  +--------------------+\n");
+}
+
+void printTetris() {
+    printf("  _______   _        _     \n");
+    printf(" |__   __| | |      (_)    \n");
+    printf("    | | ___| |_ _ __ _ ___ \n");
+    printf("    | |/ _ \\ __| '__| / __|\n");
+    printf("    | |  __/ |_| |  | \\__ \\ \n");
+    printf("    |_|\\___|\\__|_|  |_|___/ \n");
+}
+
+void printDefeat() {
+	printf("  _____        __           _   \n");
+	printf(" |  __ \\      / _|         | |  \n");
+	printf(" | |  | | ___| |_ ___  __ _| |_ \n");
+	printf(" | |  | |/ _ \\  _/ _ \\/ _` | __|\n");
+	printf(" | |__| |  __/ ||  __/ (_| | |_ \n");
+	printf(" |_____/ \\___|_| \\___|\\__,_|\\__|\n");
+}
+
+void printVictory() {
+	printf(" __      ___      _                    \n");
+	printf(" \\ \\    / (_)    | |                   \n");
+	printf("  \\ \\  / / _  ___| |_  ___  _ __ _   _ \n");
+	printf("   \\ \\/ / | |/ __| __|/ _ \\| '__| | | |\n");
+	printf("    \\  /  | | (__| |_| (_) | |  | |_| |\n");
+	printf("     \\/   |_|\\___|\\__|\\___/|_|   \\__, |\n");
+	printf("                                  __/ |\n");
+	printf("                                 |___/ \n");
 }
 
