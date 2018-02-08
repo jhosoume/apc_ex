@@ -1,3 +1,17 @@
+/*
+ * Universidade de Brasilia
+ * Instituto de Ciencias Exatas
+ * Departamento de Ciencia da Computacao
+ * Algoritmos e Programacao de Computadores
+ * –
+ * 0/2018
+ * Aluno(a): Juliana Mayumi Hosoume
+ * Matricula: 17/0003078
+ * Turma: B
+ * Versão do compilador: gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.5)
+ * Descricao: Jogo simplificado de Tetris, implementado apenas com as bibliotecas e funcoes basicas da linguagem C
+*/
+
 #include "engine.h"
 
 void start() {
@@ -18,31 +32,23 @@ void checkMatrix(char game[N_LINES][N_COLUMNS]) {
     int line, column;
     for (line = 0; line < N_LINES; ++line) {
         for (column = 0; column < N_COLUMNS; ++column) {
-            printf("Line: %d Columns: %d Value: %c\n", line, column, game[line][column]);
         }
     }
 }
 
 
 int checkBoundaries(piece c_piece) {
-    printf("ENTREI 3\n");
     if (c_piece.orientation == 'h' && c_piece.column + c_piece.size > N_COLUMNS) {
-        printf("11111\n");
         return 0;
     } else if (c_piece.orientation == 'v' && c_piece.line + c_piece.size > N_LINES) {
-        printf("22222\n");
         return 0;
     } else if (c_piece.line < 0) {
-        printf("33333\n");
         return 0;
     } else if ( c_piece.column < 0) {
-        printf("44444\n");
         return 0;
     } else if (c_piece.column > N_COLUMNS - 1) {
-        printf("55555\n");
         return 0;
     } else if (c_piece.line > N_LINES) {
-        printf("66666\n");
         return 0;
     } else {
         return 1;
@@ -51,21 +57,14 @@ int checkBoundaries(piece c_piece) {
 
 void addPiece(piece c_piece, char game[N_LINES][N_COLUMNS]) {
     int line, column;
-    printf("ENTREI\n");
     if (checkBoundaries(c_piece)) {
-        printf("ENTREI 2\n");
         if (c_piece.orientation == 'v') {
-            printf("ENTREI 4\n");
             for (line = c_piece.line; line < c_piece.line + c_piece.size; ++line) {
                 game[line][c_piece.column] = c_piece.rep;
-                printf("AQUI %d line %d column, %c\n", line, c_piece.column, c_piece.rep);
             }
         } else {
-            printf("ENTREI 5\n");
-            printf("AQUI %d line %d column, %c\n", c_piece.line, c_piece.size, c_piece.rep);
             for (column = c_piece.column; column < c_piece.column + c_piece.size; ++column) {
                 game[c_piece.line][column] = c_piece.rep;
-                printf("AQUI %d line %d column, %c\n", c_piece.line, column, c_piece.rep);
             }
         }
     }
@@ -158,12 +157,10 @@ void fall(piece *c_piece, char game[N_LINES][N_COLUMNS]) {
     free_line = freeLine(c_piece->orientation, c_piece->column, c_piece->size, game);
     if (c_piece->orientation == 'h') {
         for (column = c_piece->column; column < c_piece->column + c_piece->size; ++column) {
-            printf("[AQUI1] %d %d", free_line, column);
             game[free_line][column] = c_piece->rep;
         }
     } else {
         for (line = free_line; line > free_line - c_piece->size; --line) {
-            printf("[AQUI2] %d %d %d", line, free_line, column);
             game[line][c_piece->column] = c_piece->rep;
         }
     }
@@ -173,7 +170,6 @@ int freeLine(char orientation, int column, int size, char game[N_LINES][N_COLUMN
     int line, column_indx;
     if (orientation == 'v') {
         for (line = MAX_LINE; line < N_LINES; ++line) {
-            printf("LINE %d COLUMN %d CHAR %c \n", line, column, game[line][column]);
             if (game[line][column] != ' ') {
                 return line - 1;
             }
@@ -182,7 +178,6 @@ int freeLine(char orientation, int column, int size, char game[N_LINES][N_COLUMN
     } else {
         for (line = MAX_LINE; line < N_LINES; ++line) {
             for (column_indx = column; column_indx < column + size; ++column_indx) {
-                printf("LINE %d COLUMN %d CHAR %c \n", line, column_indx, game[line][column_indx]);
                 if (game[line][column_indx] != ' ') {
                     return line - 1;
                 }
@@ -195,16 +190,13 @@ int freeLine(char orientation, int column, int size, char game[N_LINES][N_COLUMN
 void checkCompletedLines(char game[N_LINES][N_COLUMNS], int *points) {
     int line, column, flag, line2; 
     for (line = N_LINES - 1; line > MAX_LINE; --line) {
-        printf("!!!LINE %d %d\n", line, flag);
         flag = 1;
         for (column = 0; column < N_COLUMNS; ++column) {
             if (game[line][column] == ' ') {
-                printf("FOUND EMPTY %d %d\n", line, column);
                 flag = 0;
                 break;
             }
         }
-        printf("!!!LINE %d %d\n", line, flag);
         if (flag) {
             *points += 100;
             fillLine(line, line, game);
@@ -212,7 +204,6 @@ void checkCompletedLines(char game[N_LINES][N_COLUMNS], int *points) {
             getchar();
             for (line2 = line; line2 > MAX_LINE; --line2) {
                 for (column = 0; column < N_COLUMNS; ++column) {
-                    printf("LINE %d COLUMN %d\n", line2, column);
                     game[line2][column] = game[line2 - 1][column];
                 }
             }
@@ -312,7 +303,6 @@ int readSequences(char file_name[], piece sequences[]) {
 	FILE *fp; 
 	char line[7];
 	int nseq = 0; 
-    piece read_piece;
 	fp = fopen(file_name, "r"); 
 	while (fscanf(fp,"%s", line) > 0) {
         sequences[nseq].orientation = 'v';

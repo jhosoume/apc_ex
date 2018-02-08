@@ -1,0 +1,25 @@
+Universidade de Brasilia
+Instituto de Ciencias Exatas
+Departamento de Ciencia da Computacao
+Algoritmos e Programacao de Computadores
+–
+0/2018
+Aluno(a): Juliana Mayumi Hosoume
+Matricula: 17/0003078
+Turma: B
+Versão do compilador: gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.5)
+Descricao: Jogo simplificado de Tetris, implementado apenas com as bibliotecas e funcoes basicas da linguagem C
+
+
+Considerações: como o trabalho é composto de mais de um arquivo, não foi utilizado o padrão indicado no critério de correção do trabalho.
+
+Para compilar o programa usar:
+$ make
+Se necessário recompilar do zero, usar:
+$ make clean
+
+Para rodar o programa, usar:
+$ ./tetris
+
+Durante a compilação, pode haver um warning de acordo com o compilador. O warning é referente ao retorno do scanf. Como no caso utilizado não é necessário verificar se a entrada intermediada pelo scanf foi bem sucedida, então não foi usado um condicionar para verificar falhas, o que acarreta o warning.
+
