@@ -15,12 +15,15 @@
 #include "engine.h"
 
 void start() {
+    /* Main function of the engine. */
 	char game[N_LINES][N_COLUMNS];
     int n_pieces, points;
 	piece sequences[MAX_SEQ]; 
     n_pieces = readSequences("sequences.txt", sequences);
+    clear();
     printTetris();
     startMessage();
+    /* Empty game fills matrix with empty spaces. */
     emptyGame(game);
     points = gameLoop(n_pieces, sequences, game);
     endGame(game, points);
@@ -29,15 +32,19 @@ void start() {
 
 
 void checkMatrix(char game[N_LINES][N_COLUMNS]) {
+    /* Functin used only for debuggig purposes.
+     * Prints stored character of every line and column. */
     int line, column;
     for (line = 0; line < N_LINES; ++line) {
         for (column = 0; column < N_COLUMNS; ++column) {
+            printf("Line: %d Columns: %d Value: %c\n", line, column, game[line][column]);
         }
     }
 }
 
 
 int checkBoundaries(piece c_piece) {
+    /* Checks if piece is inside the game matrix. Return 1 if inside and 0 otherwise. */
     if (c_piece.orientation == 'h' && c_piece.column + c_piece.size > N_COLUMNS) {
         return 0;
     } else if (c_piece.orientation == 'v' && c_piece.line + c_piece.size > N_LINES) {
@@ -56,6 +63,7 @@ int checkBoundaries(piece c_piece) {
 }
 
 void addPiece(piece c_piece, char game[N_LINES][N_COLUMNS]) {
+    /* Adds piece to the game matrix in two ways, accordingly to piece orientation. */
     int line, column;
     if (checkBoundaries(c_piece)) {
         if (c_piece.orientation == 'v') {
@@ -71,6 +79,7 @@ void addPiece(piece c_piece, char game[N_LINES][N_COLUMNS]) {
 }
 
 void erasePiece(piece c_piece, char game[N_LINES][N_COLUMNS]) {
+    /* Removes piece from game matrix. Usually used to refresh piece position. */
     int line, column;
     if (checkBoundaries(c_piece)) {
         if (c_piece.orientation == 'v') {
@@ -86,6 +95,7 @@ void erasePiece(piece c_piece, char game[N_LINES][N_COLUMNS]) {
 }
 
 int gameLoop(int num_pieces, piece sequences[MAX_SEQ], char game[N_LINES][N_COLUMNS]) {
+    /* Gets commands while the game is not over (victory or defeat) */
     int times = 0, count;
     int points = 0;
     char command;
@@ -136,6 +146,9 @@ void rotate(piece *c_piece, char game[N_LINES][N_COLUMNS]) {
             c_piece->orientation = 'v';
         }
     } else {
+        /* rotation from vertical to horizontal can reach board line. */
+        /* usually rotation is counter clockwise, but if close to the right border,
+         * the piece rotates in a clockwise manner. */
         t_piece.orientation = 'h';
         if (checkBoundaries(t_piece)) {
             c_piece->orientation = 'h';
@@ -143,6 +156,7 @@ void rotate(piece *c_piece, char game[N_LINES][N_COLUMNS]) {
             t_piece.column -= (t_piece.size - 1);
             if (checkBoundaries(t_piece)) {
                 c_piece->orientation = 'h';
+                /* for ratotation to be clockwise, start column must be changed */
                 c_piece->column -= (c_piece->size - 1);
             }
         }
@@ -167,7 +181,9 @@ void fall(piece *c_piece, char game[N_LINES][N_COLUMNS]) {
 }
 
 int freeLine(char orientation, int column, int size, char game[N_LINES][N_COLUMNS]) {
+    /* Column is different from column_indx, column is the current position of the piece to fall. */
     int line, column_indx;
+    /* Finds a free position for the piece to fall. If find char in the current line, return previous line. */
     if (orientation == 'v') {
         for (line = MAX_LINE; line < N_LINES; ++line) {
             if (game[line][column] != ' ') {
@@ -201,18 +217,19 @@ void checkCompletedLines(char game[N_LINES][N_COLUMNS], int *points) {
             *points += 100;
             fillLine(line, line, game);
             cleanScreen(*points, game);
-            getchar();
             for (line2 = line; line2 > MAX_LINE; --line2) {
                 for (column = 0; column < N_COLUMNS; ++column) {
                     game[line2][column] = game[line2 - 1][column];
                 }
             }
-            --line;
+            /* Since moved all lines up, need to check the current line again, so back one line */
+            ++line;
         }
     }
 }
 
 int checkLimitReached(char game[N_LINES][N_COLUMNS]) {
+    /* Check if any piece is inserted in the max area. */
     int column;
     for (column  = 0; column < N_COLUMNS; ++column) {
         if (game[MAX_LINE][column] != ' ') {
@@ -240,9 +257,12 @@ void winMessage(int points) {
     clear();
     printVictory();
     printf("*** PARABENS!!! VOCE CHEGOU AO FIM DO JOGO COM %d PONTOS\n", points);
+    cleanEnter();
+    getchar();
 }
 
 int permitedCommands(char command) {
+    /* Get if the command in valid. If valid, return 0, if not return 1. */
     switch (command) {
         case 'r':
         case 'd':
@@ -300,6 +320,7 @@ int defineAction(char command, piece *c_piece, char game[N_LINES][N_COLUMNS], in
 
 
 int readSequences(char file_name[], piece sequences[]) {
+    /* All read sequences are stored as structs. */
 	FILE *fp; 
 	char line[7];
 	int nseq = 0; 
@@ -317,6 +338,7 @@ int readSequences(char file_name[], piece sequences[]) {
 }
 
 void printSequences(piece sequences[MAX_SEQ]) {
+    /* Used for debugging purposes. Prints all read sequences. */
     int indx;
     for (indx = 0; indx < MAX_SEQ; ++indx) {
         printf("Seq %d ->", indx);
@@ -327,6 +349,7 @@ void printSequences(piece sequences[MAX_SEQ]) {
 }
 
 void emptyGame(char game[N_LINES][N_COLUMNS]) {
+    /* Fills matrix with empty spaces. */
     int line,column;
     for (line = 0; line < N_LINES; ++line) {
         for (column = 0; column < N_COLUMNS; ++column) {
@@ -336,14 +359,20 @@ void emptyGame(char game[N_LINES][N_COLUMNS]) {
 }
 
 void fillLine(int bline, int eline, char game[N_LINES][N_COLUMNS]) {
+    /* Fills defined lines of the matrix with X. */
     int line, column;
     for (line = bline; line <= eline; ++line) {
         for (column = 0; column < N_COLUMNS; ++column) {
             game[line][column] = 'X';
         }
     }
+    sleep(1);
 }
 
 void cleanActionSpace(char game[][N_COLUMNS]) {
     emptyGame(game);
+}
+
+void cleanEnter() {
+    fseek(stdin,0,SEEK_END);
 }

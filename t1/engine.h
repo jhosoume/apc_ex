@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 #include <screen.h>
 
 #define MAX_SEQ 70
@@ -51,4 +52,4 @@ void printSequences(piece sequences[MAX_SEQ]);
 void checkMatrix(char game[N_LINES][N_COLUMNS]);
 void fillLine(int bline, int eline, char game[N_LINES][N_COLUMNS]);
 void emptyGame(char game[N_LINES][N_COLUMNS]);
-
+void cleanEnter();
